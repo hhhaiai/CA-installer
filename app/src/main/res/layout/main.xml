@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/installCA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:paddingTop="16dp"
+        android:text="@string/ca_install"
+        android:textColor="#66BEFF"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:paddingTop="16dp"
+        android:textSize="30sp"/>
+
+
+    <TextView
+        android:id="@+id/readme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingTop="16dp"
+        android:text="@string/readme"
+        android:textSize="20sp"/>
+</LinearLayout>

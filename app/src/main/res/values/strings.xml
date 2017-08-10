@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Install CA</string>
+    <string name="ca_install">Install Certificate</string>
+    <string name="check_network">check network status</string>
+    <string name="install_over">install Certificate over</string>
+    <string name="readme">install info:\r\n1.click \"Install Certificate\"\r\n2.if happen error click \"check network status\", goto wifi setting activity\r\n3.will see \"install Certificate success\" when install success</string>
+
+</resources>

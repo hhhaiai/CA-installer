@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CA Installer</string>
+    <string name="ca_install">安装CA证书</string>
+    <string name="check_network">检查代理网络</string>
+    <string name="install_over">安装CA证书成功</string>
+    <string name="readme">使用简述:\r\n1.点击\"安装CA证书\"\r\n2.如有故障请点击\"检查网络状态\",跳转至wifi页面设置即可\r\n3.安装成功,会看到屏幕提示\"安装CA证书成功\"</string>
+</resources>
