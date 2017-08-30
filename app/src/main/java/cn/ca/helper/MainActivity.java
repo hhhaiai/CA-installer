@@ -104,8 +104,17 @@ public class MainActivity extends Activity {
                             if (s.contains(
                                 "If you can see this, traffic is not passing through mitmproxy.")) {
                                 Toast.makeText(MainActivity.this, "请检查代理网络", Toast.LENGTH_LONG).show();
-                                mTVStatus.setTextColor(Color.parseColor("#FF0000"));
-                                mTVStatus.setText(getResources().getString(R.string.check_network));
+                                //need running on UIThread
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mTVStatus == null) {
+                                            mTVStatus = (TextView)findViewById(R.id.status);
+                                        }
+                                        mTVStatus.setTextColor(Color.parseColor("#FF0000"));
+                                        mTVStatus.setText(getResources().getString(R.string.check_network));
+                                    }
+                                });
                             } else {
                                 L.d("will down load");
                                 jsoupDownFile();
