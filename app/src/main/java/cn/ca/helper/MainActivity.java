@@ -18,9 +18,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.security.KeyChain;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.jsoup.Connection.Response;
@@ -60,7 +62,28 @@ public class MainActivity extends Activity {
 
         TextView readme = (TextView)findViewById(R.id.readme);
         readme.setTypeface(tf);
+
+        findViewById(R.id.ac_main_base).setOnClickListener(listener);
     }
+
+    /**
+     * 三击
+     */
+    private long[] mHits = new long[3];
+
+    public final OnClickListener listener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+            mHits[mHits.length - 1] = SystemClock.uptimeMillis();//获取手机开机时间
+            if (mHits[mHits.length - 1] - mHits[0] < 500) {
+                /**双击的业务逻辑*/
+                L.e("三击");
+                //installNativeCA();
+                mMessageThreadHandler.sendMessage(mMessageThreadHandler.obtainMessage(0));
+            }
+        }
+    };
 
     public void onClick(View v) {
         int id = v.getId();
@@ -134,6 +157,12 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void jsoupDownFile() {
         FileOutputStream out = null;
         try {
@@ -187,6 +216,37 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void installNativeCA() {
+        InputStream is = null;
+        try {
+
+            /**
+             * 每个人的证书都不一样,这个是根据mitm编译各个环境运行时候产生的,一般在~/.mitmproxy的目录里
+             * <pre>
+             * [~/.mitmproxy]$ ls
+             *  mitmproxy-ca-cert.cer mitmproxy-ca-cert.p12 mitmproxy-ca-cert.pem mitmproxy-ca.pem mitmproxy-dhparam.pem
+             * </pre>
+             */
+            is = getAssets().open("mitmproxy-ca-cert.pem");
+            int lenght = is.available();
+            byte[] bytes = new byte[lenght];
+            is.read(bytes);
+
+            //byte[] keychainBytes;
+            //InputStream bis = new FileInputStream(file);
+            //keychainBytes = new byte[bis.available()];
+            //bis.read(keychainBytes);
+            Intent intent = KeyChain.createInstallIntent();
+            intent.putExtra(KeyChain.EXTRA_CERTIFICATE, bytes);
+            intent.putExtra(KeyChain.EXTRA_NAME, INSTALL_CA_NAME);
+            startActivityForResult(intent, INSTALL_CA_REQUEST_CODE);
+            mTVStatus.setTextColor(Color.parseColor("#00FF00"));
+            getResources().getString(R.string.install_over);
+        } catch (Exception e) {
+            L.e(e);
+        }
+    }
+
     /**
      * 用于回显的展示类
      */
@@ -196,10 +256,12 @@ public class MainActivity extends Activity {
         public void onPermissionGranted(int requestCode) {
             switch (requestCode) {
                 case PermissionUtils.CODE_RECORD_AUDIO:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_RECORD_AUDIO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Result Permission Grant CODE_RECORD_AUDIO", Toast.LENGTH_SHORT)
+                        .show();
                     break;
                 case PermissionUtils.CODE_GET_ACCOUNTS:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_GET_ACCOUNTS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Result Permission Grant CODE_GET_ACCOUNTS", Toast.LENGTH_SHORT)
+                        .show();
                     break;
                 case PermissionUtils.CODE_READ_PHONE_STATE:
                     Toast.makeText(mContext, "Result Permission Grant CODE_READ_PHONE_STATE", Toast.LENGTH_SHORT)
@@ -212,19 +274,23 @@ public class MainActivity extends Activity {
                     Toast.makeText(mContext, "Result Permission Grant CODE_CAMERA", Toast.LENGTH_SHORT).show();
                     break;
                 case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_FINE_LOCATION",
+                        Toast.LENGTH_SHORT)
                         .show();
                     break;
                 case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_COARSE_LOCATION", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_COARSE_LOCATION",
+                        Toast.LENGTH_SHORT)
                         .show();
                     break;
                 case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_READ_EXTERNAL_STORAGE", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "Result Permission Grant CODE_READ_EXTERNAL_STORAGE",
+                        Toast.LENGTH_SHORT)
                         .show();
                     break;
                 case PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE:
-                    Toast.makeText(mContext, "Result Permission Grant CODE_WRITE_EXTERNAL_STORAGE", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "Result Permission Grant CODE_WRITE_EXTERNAL_STORAGE",
+                        Toast.LENGTH_SHORT)
                         .show();
                     break;
                 default:
