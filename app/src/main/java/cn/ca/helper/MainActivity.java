@@ -162,19 +162,19 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("keya", "keyb");
-            obj.put("keyb", "keyb");
-            obj.put("keyc", "keyb");
-            obj.put("keyd", "keyb");
-            L.e(obj);
-
-            KLog.init(true, "sanbo");
-            KLog.json(obj.toString());
-        } catch (Throwable e) {
-            L.e(e);
-        }
+        //try {
+        //    JSONObject obj = new JSONObject();
+        //    obj.put("keya", "keyb");
+        //    obj.put("keyb", "keyb");
+        //    obj.put("keyc", "keyb");
+        //    obj.put("keyd", "keyb");
+        //    L.e(obj);
+        //
+        //    KLog.init(true, "sanbo");
+        //    KLog.json(obj.toString());
+        //} catch (Throwable e) {
+        //    L.e(e);
+        //}
 
     }
 
