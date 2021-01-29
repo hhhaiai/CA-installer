@@ -1,10 +1,5 @@
 package cn.ca.helper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Context;
@@ -25,11 +20,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.ca.helper.library.KLog;
-import org.json.JSONObject;
+
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  * @author sanbo
@@ -56,13 +55,13 @@ public class MainActivity extends Activity {
             PermissionUtils.requestPermission(this, PermissionUtils.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
         }
         registerHandler();
-        mTVStatus = (TextView)findViewById(R.id.status);
+        mTVStatus = (TextView) findViewById(R.id.status);
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Helvetica.ttf");
-        TextView a = (TextView)findViewById(R.id.installCA);
+        TextView a = (TextView) findViewById(R.id.installCA);
         a.setTypeface(tf);
         mTVStatus.setTypeface(tf);
 
-        TextView readme = (TextView)findViewById(R.id.readme);
+        TextView readme = (TextView) findViewById(R.id.readme);
         readme.setTypeface(tf);
 
         findViewById(R.id.ac_main_base).setOnClickListener(listener);
@@ -91,7 +90,9 @@ public class MainActivity extends Activity {
         int id = v.getId();
         switch (id) {
             case R.id.installCA:
-                mMessageThreadHandler.sendMessage(mMessageThreadHandler.obtainMessage(0));
+//                mMessageThreadHandler.sendMessage(mMessageThreadHandler.obtainMessage(0));
+
+                installNativeCA();
                 break;
             case R.id.status:
                 mMessageThreadHandler.sendMessage(mMessageThreadHandler.obtainMessage(1));
@@ -127,14 +128,14 @@ public class MainActivity extends Activity {
                             Document doc = Jsoup.connect(URL_BASE).get();
                             String s = doc.toString();
                             if (s.contains(
-                                "If you can see this, traffic is not passing through mitmproxy.")) {
+                                    "If you can see this, traffic is not passing through mitmproxy.")) {
                                 Toast.makeText(MainActivity.this, "请检查代理网络", Toast.LENGTH_LONG).show();
                                 //need running on UIThread
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (mTVStatus == null) {
-                                            mTVStatus = (TextView)findViewById(R.id.status);
+                                            mTVStatus = (TextView) findViewById(R.id.status);
                                         }
                                         mTVStatus.setTextColor(Color.parseColor("#FF0000"));
                                         mTVStatus.setText(getResources().getString(R.string.check_network));
@@ -154,7 +155,8 @@ public class MainActivity extends Activity {
                     default:
                         break;
                 }
-            } finally {}
+            } finally {
+            }
         }
 
     }
@@ -184,10 +186,10 @@ public class MainActivity extends Activity {
             if (PermissionUtils.checkPermission(mContext, permission.WRITE_EXTERNAL_STORAGE)) {
                 L.i("有权限下载.........");
                 Response resultImageResponse = Jsoup.connect(URL_DOWMLOAD).ignoreContentType(true).ignoreHttpErrors(
-                    true)
-                    .execute();
+                        true)
+                        .execute();
                 String desFileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                    + "Download";
+                        + "Download";
                 File dir = new File(desFileDir);
                 if (!dir.exists()) {
                     dir.mkdirs();
@@ -202,7 +204,8 @@ public class MainActivity extends Activity {
                 Toast.makeText(mContext, "没有权限下载!", Toast.LENGTH_LONG).show();
             }
 
-        } catch (Throwable e) {} finally {
+        } catch (Throwable e) {
+        } finally {
 
             if (out != null) {
                 try {
@@ -257,7 +260,7 @@ public class MainActivity extends Activity {
             startActivityForResult(intent, INSTALL_CA_REQUEST_CODE);
             mTVStatus.setTextColor(Color.parseColor("#00FF00"));
             getResources().getString(R.string.install_over);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             L.e(e);
         }
     }
@@ -272,15 +275,15 @@ public class MainActivity extends Activity {
             switch (requestCode) {
                 case PermissionUtils.CODE_RECORD_AUDIO:
                     Toast.makeText(mContext, "Result Permission Grant CODE_RECORD_AUDIO", Toast.LENGTH_SHORT)
-                        .show();
+                            .show();
                     break;
                 case PermissionUtils.CODE_GET_ACCOUNTS:
                     Toast.makeText(mContext, "Result Permission Grant CODE_GET_ACCOUNTS", Toast.LENGTH_SHORT)
-                        .show();
+                            .show();
                     break;
                 case PermissionUtils.CODE_READ_PHONE_STATE:
                     Toast.makeText(mContext, "Result Permission Grant CODE_READ_PHONE_STATE", Toast.LENGTH_SHORT)
-                        .show();
+                            .show();
                     break;
                 case PermissionUtils.CODE_CALL_PHONE:
                     Toast.makeText(mContext, "Result Permission Grant CODE_CALL_PHONE", Toast.LENGTH_SHORT).show();
@@ -290,23 +293,23 @@ public class MainActivity extends Activity {
                     break;
                 case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
                     Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_FINE_LOCATION",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                            Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
                     Toast.makeText(mContext, "Result Permission Grant CODE_ACCESS_COARSE_LOCATION",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                            Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
                     Toast.makeText(mContext, "Result Permission Grant CODE_READ_EXTERNAL_STORAGE",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                            Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 case PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE:
                     Toast.makeText(mContext, "Result Permission Grant CODE_WRITE_EXTERNAL_STORAGE",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                            Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 default:
                     break;
